@@ -14,18 +14,19 @@ public class DictionaryServer {
     private PrintWriter outProxy;
     private BufferedReader inProxy;
     private String[] getMessage;
-    int port = 1235;
+    int port;
     Map<String, String> translationMap = new HashMap<>();
 
     public static void main(String[] args) {
         DictionaryServer dictionaryServer = new DictionaryServer();
         dictionaryServer.translationMap.put("krzesło", "chair");
         dictionaryServer.translationMap.put("stół", "table");
+        dictionaryServer.port = Integer.parseInt(args[0]);
         try{
             dictionaryServer.serverSocket = new ServerSocket(dictionaryServer.port);
             dictionaryServer.proxySocket = new Socket("localhost", 1234);
             dictionaryServer.outProxy = new PrintWriter(dictionaryServer.proxySocket.getOutputStream(), true);
-            dictionaryServer.outProxy.println("register" + "," + args[0] + "," + dictionaryServer.port);
+            dictionaryServer.outProxy.println("register" + "," + args[1] + "," + dictionaryServer.port);
             dictionaryServer.outProxy.close();
             dictionaryServer.proxySocket.close();
             while(true){
@@ -42,7 +43,6 @@ public class DictionaryServer {
     public DictionaryServer(){}
 
     public void connectionToClient(String ip, int port) throws IOException {
-        System.out.println("connectionToClient");
         clientSocket = new Socket(ip, port);
         outClient = new PrintWriter(clientSocket.getOutputStream(), true);
         outClient.println(translationMap.get(getMessage[0]));
@@ -51,15 +51,12 @@ public class DictionaryServer {
     }
 
     public void startListen() throws IOException {
-        System.out.println("startListenDict");
         proxySocket = serverSocket.accept();
         inProxy = new BufferedReader(new InputStreamReader(proxySocket.getInputStream()));
         getMessage = inProxy.readLine().split(",");
-        System.out.println(getMessage[0] + getMessage[1] + getMessage[2]);
     }
 
     public void stopListen() throws IOException {
-        System.out.println("stopListen");
         inProxy.close();
         proxySocket.close();
     }
