@@ -21,6 +21,7 @@ public class Client extends Application {
     private BufferedReader inDictionary;
     private BufferedReader inProxy;
     static int port;
+    static int portProxy;
 
     public Client(){
     }
@@ -80,7 +81,7 @@ public class Client extends Application {
 
         applyInputButton.setOnMouseClicked(event -> {
             try {
-                connectionToProxy("localhost", 1234);
+                connectionToProxy("localhost", portProxy);
                 outProxy.println(inputWord.getText() + "," + inputLanguageCode.getText() + "," + port);
                 //odpalanie serwera klienta
                 if(startListenProxy(port).equals("wrong code")){
@@ -114,6 +115,7 @@ public class Client extends Application {
 
     public static void main(String[] args) {
         port = Integer.parseInt(args[0]);
+        portProxy = Integer.parseInt(args[1]);
         Application.launch(Client.class);
     }
 }

@@ -24,7 +24,7 @@ public class DictionaryServer {
         dictionaryServer.port = Integer.parseInt(args[0]);
         try{
             dictionaryServer.serverSocket = new ServerSocket(dictionaryServer.port);
-            dictionaryServer.proxySocket = new Socket("localhost", 1234);
+            dictionaryServer.proxySocket = new Socket("localhost", Integer.parseInt(args[2]));
             dictionaryServer.outProxy = new PrintWriter(dictionaryServer.proxySocket.getOutputStream(), true);
             dictionaryServer.outProxy.println("register" + "," + args[1] + "," + dictionaryServer.port);
             dictionaryServer.outProxy.close();
