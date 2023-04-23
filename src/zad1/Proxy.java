@@ -27,22 +27,22 @@ public class Proxy {
             while(true){
                 proxy.startListen();
                 if(proxy.isClient){
-                    for (Map.Entry<String, String> entry : proxy.addressMap.entrySet()) {
+                    boolean existingCode = false;
+                    for (Map.Entry<String, String> entry : proxy.addressMap.entrySet()){
                         if (entry.getKey().equals(proxy.getMessage[1])) {
-                            proxy.isCorrectCode = true;
-                        } else {
-                            proxy.isCorrectCode = false;
+                            existingCode = true;
                         }
-                        if (proxy.isCorrectCode) {
-                            proxy.outClient = new PrintWriter(proxy.clientSocket.getOutputStream(), true);
-                            proxy.outClient.println("okay");
-                            proxy.outClient.close();
-                            proxy.connectionToDictionary(proxy.addressMap.get(proxy.getMessage[1]).split(":")[0], Integer.parseInt(proxy.addressMap.get(proxy.getMessage[1]).split(":")[1]));
-                        } else {
-                            proxy.outClient = new PrintWriter(proxy.clientSocket.getOutputStream(), true);
-                            proxy.outClient.println("wrong code");
-                            proxy.outClient.close();
-                        }
+                    }
+                    if(!existingCode){
+                        proxy.outClient = new PrintWriter(proxy.clientSocket.getOutputStream(), true);
+                        proxy.outClient.println("wrong code");
+                        proxy.outClient.close();
+                    } else{
+                        System.out.println("Correct code");
+                        proxy.outClient = new PrintWriter(proxy.clientSocket.getOutputStream(), true);
+                        proxy.outClient.println("okay");
+                        proxy.outClient.close();
+                        proxy.connectionToDictionary(proxy.addressMap.get(proxy.getMessage[1]).split(":")[0], Integer.parseInt(proxy.addressMap.get(proxy.getMessage[1]).split(":")[1]));
                     }
                 }
                 proxy.stopListen();

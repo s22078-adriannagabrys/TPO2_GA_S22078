@@ -19,9 +19,14 @@ public class DictionaryServer {
 
     public static void main(String[] args) {
         DictionaryServer dictionaryServer = new DictionaryServer();
-        dictionaryServer.translationMap.put("krzesło", "chair");
-        dictionaryServer.translationMap.put("stół", "table");
+//        dictionaryServer.translationMap.put("krzesło", "chair");
+//        dictionaryServer.translationMap.put("stół", "table");
+
+        for(int i = 3; i < args.length; i = i+2){
+            dictionaryServer.translationMap.put(args[i], args[i+1]);
+        }
         dictionaryServer.port = Integer.parseInt(args[0]);
+        System.out.println(dictionaryServer.translationMap);
         try{
             dictionaryServer.serverSocket = new ServerSocket(dictionaryServer.port);
             dictionaryServer.proxySocket = new Socket("localhost", Integer.parseInt(args[2]));
@@ -46,6 +51,7 @@ public class DictionaryServer {
         clientSocket = new Socket(ip, port);
         outClient = new PrintWriter(clientSocket.getOutputStream(), true);
         outClient.println(translationMap.get(getMessage[0]));
+        System.out.println(translationMap.get(getMessage[0]));
         outClient.close();
         clientSocket.close();
     }
